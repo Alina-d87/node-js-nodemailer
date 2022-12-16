@@ -10,8 +10,6 @@ const replaceFile = async (contacts) => {
 
 const { nanoid } = require("nanoid");
 
-const validator = require("validator");
-
 const listContacts = async () => {
   try {
     const list = await fs.readFile(contactsPath);
@@ -52,32 +50,12 @@ const removeContact = async (contactId) => {
 
 const addContact = async ({ name, email, phone }) => {
   try {
-    if (!name) {
-      return `Name is required`;
-    }
-    if (!email) {
-      return `Email is required`;
-    }
-    if (!phone) {
-      return `Phone is required`;
-    }
-
-    const isValidEmail = validator.isEmail(email);
-    if (!isValidEmail) {
-      return `Email entered incorrectly`;
-    }
-
-    const isValidPhone = validator.isMobilePhone(String(phone));
-    if (!isValidPhone) {
-      return `Phone number entered incorrectly`;
-    }
-
     const contacts = await listContacts();
     const newContact = {
       id: nanoid(),
       name,
       email,
-      phone,
+      phone: String(phone),
     };
     contacts.push(newContact);
     await replaceFile(contacts);
@@ -107,17 +85,6 @@ const updateContactById = async (id, data) => {
       email: data.email ?? indexEmail,
       phone: String(data.phone ?? indexPhone),
     };
-    const isValidEmail = validator.isEmail(contacts[indexContact].email);
-    if (!isValidEmail) {
-      return `Email entered incorrectly`;
-    }
-
-    const isValidPhone = validator.isMobilePhone(
-      String(contacts[indexContact].phone)
-    );
-    if (!isValidPhone) {
-      return `Phone number entered incorrectly`;
-    }
     await replaceFile(contacts);
     return contacts[indexContact];
   } catch (error) {
