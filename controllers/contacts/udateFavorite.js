@@ -17,4 +17,4 @@ const updateFavorite = async (req, res, next) => {
   }
 };
 
-module.export = updateFavorite;
+module.exports = updateFavorite;
