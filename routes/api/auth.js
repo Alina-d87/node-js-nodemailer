@@ -17,7 +17,7 @@ router.post(
   ctrlWrapper(ctrlUser.register)
 );
 
-router.get("/verify/:verificationCode", ctrlWrapper(ctrlUser.verify));
+router.get("/verify/:verificationToken", ctrlWrapper(ctrlUser.verify));
 
 router.post(
   "./verify",

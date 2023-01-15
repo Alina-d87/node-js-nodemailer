@@ -6,7 +6,7 @@ const { User } = require("..//..//models/user");
 
 const { HttpError, sendEmail } = require("..//..//helpers");
 
-//require("dotenv").config(); //імпортуємо, якщо не працює, так як основний імпорт dotenv лежить в app
+require("dotenv").config(); //імпортуємо, якщо не працює, так як основний імпорт dotenv лежить в app
 const { BASE_URL } = process.env;
 
 const register = async (req, res) => {
@@ -22,18 +22,19 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
-  const verificationCode = nanoid();
+  const verificationToken = nanoid();
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
+    verificationToken,
   });
 
   const verifyEmail = {
     to: email,
     subject: "Verify you email",
-    html: `<a target="blank" href="${BASE_URL}/api/auth/verify/${verificationCode}">Click verify email </a>`,
+    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationToken}">Click verify email </a>`,
   };
 
   await sendEmail(verifyEmail);
